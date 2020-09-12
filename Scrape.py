@@ -4,6 +4,8 @@
 # popularity and media type data to calculate the best option for
 # investment.
 ################################################################
+# To do: develop methodology to run this entire program as a 
+# function.
 
 import requests
 from bs4 import BeautifulSoup
@@ -55,8 +57,9 @@ for data in soup_top_books.find_all('div', class_='ImZGtf mpg5gc'):
     for genre in soup_book.find_all('span', class_='htlgb'):
 
         # increment counter to appropriate div
-        # there are a few titles this section is off for
-        # but the majority of them work fine
+        # there are a few books this section is off for
+        # but the majority of them work fine (this is refered
+        # to int the hard code comment above)
         count += 1
 
         # if count has reached the correct div, add the genre to the list
@@ -86,20 +89,21 @@ for genre in result:
 print(count_dict)
 ################################################################
 
-with urlopen('https://play.google.com/store/music/collection/cluster?clp=0g4dChsKFXRvcHNlbGxpbmdfcGFpZF90cmFjaxAHGAI%3D:S:ANO1ljLoK88&gsr=CiDSDh0KGwoVdG9wc2VsbGluZ19wYWlkX3RyYWNrEAcYAg%3D%3D:S:ANO1ljIhfqg') as main_songs:
+with urlopen('https://play.google.com/store/music/collection/cluster?clp=0g4dChsKFXRvcHNlbGxpbmdfcGFpZF90cmFjaxAHGAI%3D:S'
+             ':ANO1ljLoK88&gsr=CiDSDh0KGwoVdG9wc2VsbGluZ19wYWlkX3RyYWNrEAcYAg%3D%3D:S:ANO1ljIhfqg') as main_songs:
     soup_top_songs = BeautifulSoup(main_songs,'lxml')
 
 #################################################################
 
-# go to each individual book page to retrieve its genres
+# go to each individual song page to retrieve its genres
 
-# init a list to store the genres of each book
+# init a list to store the genres of each song
 song_genres = []
 
-# loop through the soup obj to find each book division
+# loop through the soup obj to find each song division
 for data in soup_top_songs.find_all('div', class_='ImZGtf mpg5gc'):
 
-    # find the sub-div containing the link to the book page and convert to str
+    # find the sub-div containing the link to the song page and convert to str
     song_link_raw = data.find('a', class_='poRVub')
     song_link_raw = str(song_link_raw)
 
@@ -111,15 +115,15 @@ for data in soup_top_songs.find_all('div', class_='ImZGtf mpg5gc'):
 
     # concatenate protocol and resource name
     song_link = 'https://play.google.com' + song_link_raw[:index]
-    # open constructed book page link
+    # open constructed song page link
     with urlopen(song_link) as sub_page_song:
 
         # init new Beautiful soup obj
         soup_song = BeautifulSoup(sub_page_song, 'lxml')
 
-    # !!!!hard coded counter to deal with indistinguishable divs
-    # There are sections at the bottom of each book page with
-    # information such as publisher, ISBN, genre, etc.
+    # !!!!hard coded counter to deal with indistinguishable divs.
+    # There are sections at the bottom of each song page with
+    # information such as track, length, genre, etc.
     # Need to find differentiating attr. to avoid hard coding here!!!!
     count_song = 0
 
@@ -127,8 +131,6 @@ for data in soup_top_songs.find_all('div', class_='ImZGtf mpg5gc'):
     for genre in soup_song.find_all('span', class_='htlgb'):
 
         # increment counter to appropriate div
-        # there are a few titles this section is off for
-        # but the majority of them work fine
         count_song += 1
 
         # if count has reached the correct div, add the genre to the list
