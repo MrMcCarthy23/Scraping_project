@@ -94,6 +94,8 @@ with urlopen('https://play.google.com/store/music/collection/cluster?clp=0g4dChs
     soup_top_songs = BeautifulSoup(main_songs,'lxml')
 
 #################################################################
+# The songs section only accounts for the top 50 songs
+#################################################################
 
 # go to each individual song page to retrieve its genres
 
