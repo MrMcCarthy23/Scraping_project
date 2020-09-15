@@ -168,8 +168,71 @@ for genre_song in result_song:
 print(count_dict_song)
 ################################################################
 
+with urlopen(
+        'https://play.google.com/store/apps/collection/cluster?clp'
+        '=0g4jCiEKG3RvcHNlbGxpbmdfZnJlZV9BUFBMSUNBVElPThAHGAM%3D:'
+        'S:ANO1ljKs-KA&gsr=CibSDiMKIQobdG9wc2VsbGluZ19mcmVlX0FQUExJQ0FUSU9OEAcYAw%3D%3D:S:ANO1ljL40zU') as main_apps:
+    soup_top_apps = BeautifulSoup(main_apps, 'lxml')
+
+#################################################################
+# The apps section only accounts for the top 49 apps
+#################################################################
+
+# go to each individual app page to retrieve its genres
+
+# init a list to store the genres of each app
+app_genres = []
+
+# loop through the soup obj to find each app division
+for data in soup_top_apps.find_all('div', class_='ImZGtf mpg5gc'):
+
+    # find the sub-div containing the link to the app page and convert to str
+    app_link_raw = data.find('a', class_='poRVub')
+    app_link_raw = str(app_link_raw)
+
+    # slice str to beginning of path
+    app_link_raw = app_link_raw[43:]
+
+    # slice str at end of url
+    index = app_link_raw.find('"')
+
+    # concatenate protocol and resource name
+    app_link = 'https://play.google.com' + app_link_raw[:index]
+
+    # open constructed app page link
+    with urlopen(app_link) as sub_page_app:
+
+        # init new Beautiful soup obj
+        soup_app = BeautifulSoup(sub_page_app, 'lxml')
+
+    # counter for the two spans at the top of the page
+    counter_app = 0
+    # loop through all the genre links at top of page
+    for genre in soup_app.find_all('a', class_='hrTbp R8zArc'):
+        if counter_app == 1:
+            app_genres.append(genre.text)
+        counter_app += 1
+# _______________________________________________________________________
 
 
+# loop through reference list and split the formatted strings
+temp_app = []
+for i in range(len(app_genres)):
+    temp_app.append(app_genres[i].split('/'))
 
+# loop through the temp list to separate the genres into individual str
+result_app = []
+for i in range(len(temp_app)):
+    for j in range(len(temp_app[i])):
+        result_app.append(temp_app[i][j])
 
+# use dict to count the occurrences of each genre
+count_dict_app = {}
+for genre_app in result_app:
+    if genre_app in count_dict_app:
+        count_dict_app[genre_app] += 1
+    else:
+        count_dict_app[genre_app] = 1
 
+print(count_dict_app)
+################################################################
