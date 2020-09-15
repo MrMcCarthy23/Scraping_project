@@ -11,14 +11,17 @@ import requests
 from bs4 import BeautifulSoup
 import requests
 from urllib.request import urlopen
-#################################################################
+# _______________________________________________________________________
+
 # open google play site to top rated free books
 with urlopen('https://play.google.com/store/books/collection/cluster?clp=0g4XChUKD3RvcHNlbGxpbmdfZnJlZRAHGAE%3D:S'
              ':ANO1ljKG7Lo&gsr=ChrSDhcKFQoPdG9wc2VsbGluZ19mcmVlEAcYAQ%3D%3D:S:ANO1ljLtUdw') as main_books:
 
     # create beautiful soup obj
     soup_top_books = BeautifulSoup(main_books, 'lxml')
-#################################################################
+# _______________________________________________________________________
+
+
 
 # go to each individual book page to retrieve its genres
 
@@ -65,7 +68,9 @@ for data in soup_top_books.find_all('div', class_='ImZGtf mpg5gc'):
         # if count has reached the correct div, add the genre to the list
         if count == 8:
             book_genres.append(genre.text)
-#############################################################################
+# _______________________________________________________________________
+
+
 
 # loop through reference list and split the formatted strings
 temp = []
@@ -138,7 +143,8 @@ for data in soup_top_songs.find_all('div', class_='ImZGtf mpg5gc'):
         # if count has reached the correct div, add the genre to the list
         if count_song == 1:
             song_genres.append(genre.text)
-#############################################################################
+# _______________________________________________________________________
+
 
 # loop through reference list and split the formatted strings
 temp_song = []
